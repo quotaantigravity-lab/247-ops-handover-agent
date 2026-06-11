@@ -14,10 +14,14 @@ Dự án sử dụng hạ tầng **GreenNode AgentBase** và dịch vụ **Model
     *   Khi có sự cố (Ví dụ: cổng thanh toán BIDV, VietQR lỗi), kỹ sư mất nhiều thời gian soạn thảo email cảnh báo sự cố (Incident Email) theo đúng biểu mẫu gửi cho CS và các bên liên quan.
     *   Việc tra cứu quy trình vận hành tiêu chuẩn (SOP) đối với từng lỗi của hàng chục đối tác ngân hàng/nhà mạng diễn ra chậm chạp khi phải tìm kiếm thủ công trong tài liệu Confluence hoặc các file rời rạc.
 *   **Giải pháp của Agent:**
-    *   **Dashboard quản lý Log ca trực:** Cho phép thêm, sửa, xóa các log sự cố, bảo trì và ghi chú ca trực với giao diện trực quan, phân loại mức độ nghiêm trọng và trạng thái xử lý.
+    *   **Dashboard quản lý Log ca trực:** Cho phép thêm, sửa, xóa các log sự vụ, bảo trì và ghi chú ca trực với giao diện trực quan, phân loại mức độ nghiêm trọng và trạng thái xử lý.
     *   **AI Chatbot hỗ trợ ca trực (Minimax m2.5):** Tích hợp công nghệ RAG (Retrieval-Augmented Generation), cho phép kỹ sư tải lên các file quy trình định dạng **Word (.docx), Excel (.xlsx), PDF (.pdf), Text (.txt)**. AI sẽ tự động đọc, hiểu tài liệu để phản hồi hướng xử lý chuẩn cho từng lỗi.
     *   **Tự động soạn Email Sự cố:** AI tự động bóc tách thông tin sự cố hiện tại từ log (tên đối tác, thời gian lỗi, ảnh hưởng) để sinh email cảnh báo sự cố chuẩn mẫu của đơn vị chỉ với 1-click.
-    *   **Xuất Báo cáo bàn giao ca tự động:** Tự động tổng hợp toàn bộ nhật ký ca trực thành báo cáo bàn giao ca định dạng Markdown chuyên nghiệp để gửi qua Microsoft Teams hoặc Outlook.
+    *   **Xuất Báo cáo bàn giao ca tự động:** Tự động tổng hợp toàn bộ nhật ký ca trực thành báo cáo bàn giao ca định dạng Markdown chuyên nghiệp để gửi qua Microsoft Teams hoặc Outlook. Tích hợp lưu trữ tên kỹ sư bàn giao qua trình duyệt (`localStorage`).
+    *   **Tự động đồng bộ Cảnh báo Nagios từ Email (IMAP Integration):** Đồng bộ trực tiếp email alert từ hộp thư công ty (Gmail, Outlook/O365) theo bộ lọc tìm kiếm IMAP tùy chỉnh. Hỗ trợ các gợi ý nhập liệu điền nhanh và các đường link hỗ trợ lấy App Password (Gmail / Outlook) tiện lợi.
+    *   **Ghi nhận nhanh sự cố (Quick Log Import):** Hỗ trợ nút click tự động điền trước (pre-fill) nội dung email cảnh báo Nagios vào biểu mẫu Log ca trực, giảm thiểu sai sót do nhập tay.
+    *   **Phát hiện Leo thang Sự cố (Check Alert Spike):** Phím tắt giúp gửi lệnh yêu cầu AI phân tích tiến trình thời gian và cảnh báo sớm các thiết bị/dịch vụ đang có dấu hiệu leo thang lỗi (độ trễ replication replica, tràn bộ nhớ, quá tải CPU) dựa trên kịch bản giả lập 14 alerts của 9 node.
+    *   **Hỗ trợ chế độ Sáng/Tối (Dark & Light Theme):** Chuyển đổi theme linh hoạt qua nút bấm trên Header, tự động đổi màu sắc tương phản cao cho chữ cột Thiết bị/Host, lưu trạng thái bằng `localStorage`.
 
 ---
 
