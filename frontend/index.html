@@ -12,7 +12,7 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Main Style Sheet -->
-    <link rel="stylesheet" href="style.css?v=1.1.7">
+    <link rel="stylesheet" href="style.css?v=1.1.8">
 </head>
 <body>
     <div class="glass-bg-container"></div>
@@ -303,7 +303,14 @@
                 
                 <div id="imap-config-fields" style="display: none; flex-direction: column; gap: 12px;">
                     <div class="form-group">
-                        <label for="imap-server-input">IMAP Server Address</label>
+                        <div class="form-group-header">
+                            <label for="imap-server-input">IMAP Server Address</label>
+                            <span class="suggestions-container">
+                                Gợi ý: 
+                                <span class="suggestion-link" onclick="document.getElementById('imap-server-input').value='imap.gmail.com'">Gmail</span> | 
+                                <span class="suggestion-link" onclick="document.getElementById('imap-server-input').value='outlook.office365.com'">Outlook</span>
+                            </span>
+                        </div>
                         <input type="text" id="imap-server-input" placeholder="Ví dụ: imap.gmail.com">
                     </div>
                     <div class="form-group">
@@ -316,7 +323,14 @@
                         <small style="color: var(--text-muted); font-size: 0.72rem; line-height: 1.3;">Đối với Gmail, bạn cần bật Xác minh 2 bước và tạo Mật khẩu ứng dụng (App Password) để kết nối.</small>
                     </div>
                     <div class="form-group">
-                        <label for="imap-filter-input">IMAP Search Filter (Bộ lọc thư)</label>
+                        <div class="form-group-header">
+                            <label for="imap-filter-input">IMAP Search Filter (Bộ lọc thư)</label>
+                            <span class="suggestions-container">
+                                Gợi ý: 
+                                <span class="suggestion-link" onclick="document.getElementById('imap-filter-input').value='(SUBJECT &quot;Nagios&quot;)'">Tiêu đề</span> | 
+                                <span class="suggestion-link" onclick="document.getElementById('imap-filter-input').value='(FROM &quot;nagios@yourdomain.com&quot;)'">Người gửi</span>
+                            </span>
+                        </div>
                         <input type="text" id="imap-filter-input" placeholder="Ví dụ: (SUBJECT &quot;Nagios&quot;)">
                         <small style="color: var(--text-muted); font-size: 0.72rem; line-height: 1.3;">Cú pháp IMAP Search. Mặc định: <code>(SUBJECT "Nagios")</code>. Có thể đổi thành <code>(FROM "nagios@yourdomain.com")</code>.</small>
                     </div>
@@ -330,6 +344,6 @@
     </div>
 
     <!-- Script imports -->
-    <script src="app.js?v=1.1.7"></script>
+    <script src="app.js?v=1.1.8"></script>
 </body>
 </html>

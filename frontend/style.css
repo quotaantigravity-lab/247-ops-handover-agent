@@ -1254,3 +1254,30 @@ body {
     font-style: italic;
 }
 
+/* Suggestions next to form group labels */
+.form-group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2px;
+}
+
+.suggestions-container {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    user-select: none;
+}
+
+.suggestion-link {
+    color: var(--color-green);
+    cursor: pointer;
+    text-decoration: none;
+    border-bottom: 1px dotted var(--color-green);
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.suggestion-link:hover {
+    color: #fff;
+    border-bottom-color: #fff;
+}
+
