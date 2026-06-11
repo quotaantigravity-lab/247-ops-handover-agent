@@ -48,12 +48,25 @@ const btnCloseSettings = document.getElementById("btn-close-settings");
 const btnCancelSettings = document.getElementById("btn-cancel-settings");
 const btnSaveSettings = document.getElementById("btn-save-settings");
 const apiKeyInput = document.getElementById("api-key-input");
+const btnToggleTheme = document.getElementById("btn-toggle-theme");
 
 // Initialization
 document.addEventListener("DOMContentLoaded", () => {
+    initTheme();
     initApp();
     setupEventListeners();
 });
+
+function initTheme() {
+    const savedTheme = localStorage.getItem("app_theme") || "dark";
+    if (savedTheme === "light") {
+        document.body.classList.add("light-theme");
+        if (btnToggleTheme) {
+            const icon = btnToggleTheme.querySelector("i");
+            if (icon) icon.className = "fa-solid fa-sun";
+        }
+    }
+}
 
 async function initApp() {
     await fetchConfig();
@@ -126,6 +139,20 @@ function setupEventListeners() {
     btnCloseSettings.addEventListener("click", closeModal);
     btnCancelSettings.addEventListener("click", closeModal);
     btnSaveSettings.addEventListener("click", handleSaveSettings);
+    
+    if (btnToggleTheme) {
+        btnToggleTheme.addEventListener("click", () => {
+            document.body.classList.toggle("light-theme");
+            const isLight = document.body.classList.contains("light-theme");
+            localStorage.setItem("app_theme", isLight ? "light" : "dark");
+            
+            const icon = btnToggleTheme.querySelector("i");
+            if (icon) {
+                icon.className = isLight ? "fa-solid fa-sun" : "fa-solid fa-moon";
+            }
+            showToast(isLight ? "Đã chuyển sang giao diện Sáng!" : "Đã chuyển sang giao diện Tối!", "info");
+        });
+    }
     
     if (imapEnabledInput) {
         imapEnabledInput.addEventListener("change", toggleImapFieldsVisibility);

@@ -12,7 +12,7 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Main Style Sheet -->
-    <link rel="stylesheet" href="style.css?v=1.1.9">
+    <link rel="stylesheet" href="style.css?v=1.2.0">
 </head>
 <body>
     <div class="glass-bg-container"></div>
@@ -31,6 +31,9 @@
                     <span class="pulse-dot green"></span>
                     <span class="status-text">System Normal</span>
                 </div>
+                <button class="btn btn-secondary btn-icon" id="btn-toggle-theme" title="Chuyển chế độ Sáng/Tối">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
                 <button class="btn btn-secondary btn-icon" id="btn-open-settings" title="Cấu hình hệ thống">
                     <i class="fa-solid fa-gear"></i>
                 </button>
@@ -150,31 +153,33 @@
                     <!-- Handover Report Generator -->
                     <section class="panel panel-handover" id="panel-handover">
                         <div class="panel-header">
-                            <h2><i class="fa-solid fa-file-signature"></i> Tạo Báo Cáo Bàn Giao Ca</h2>
-                            <div class="handover-actions">
-                                <button class="btn btn-secondary" id="btn-generate-handover">
-                                    <i class="fa-solid fa-arrows-rotate"></i> Tạo báo cáo mới
-                                </button>
-                                <button class="btn btn-primary" id="btn-copy-handover">
-                                    <i class="fa-regular fa-copy"></i> Sao chép nội dung
-                                </button>
-                            </div>
+                            <h2><i class="fa-solid fa-file-signature"></i> Báo Cáo Bàn Giao Ca</h2>
                         </div>
                         <div class="panel-body">
                             <!-- Handover Engineers Input -->
                             <div class="form-row split">
                                 <div class="form-group">
                                     <label for="handover-sender">Người bàn giao</label>
-                                    <input type="text" id="handover-sender" placeholder="Họ tên kỹ sư trực ca này">
+                                    <input type="text" id="handover-sender" placeholder="Kỹ sư giao ca">
                                 </div>
                                 <div class="form-group">
                                     <label for="handover-receiver">Người nhận bàn giao</label>
-                                    <input type="text" id="handover-receiver" placeholder="Họ tên kỹ sư ca tiếp theo">
+                                    <input type="text" id="handover-receiver" placeholder="Kỹ sư nhận ca">
                                 </div>
                             </div>
+                            
+                            <div class="handover-actions">
+                                <button class="btn btn-secondary" id="btn-generate-handover">
+                                    <i class="fa-solid fa-arrows-rotate"></i> Tạo báo cáo
+                                </button>
+                                <button class="btn btn-primary" id="btn-copy-handover">
+                                    <i class="fa-regular fa-copy"></i> Sao chép
+                                </button>
+                            </div>
+                            
                             <div class="handover-preview-container">
                                 <div class="markdown-preview" id="handover-preview">
-                                    <p class="preview-placeholder">Nhấn nút "Tạo báo cáo mới" ở trên để tự động tổng hợp tất cả các log sự vụ trong ca thành một báo cáo bàn giao chuẩn Markdown...</p>
+                                    <p class="preview-placeholder">Điền tên kỹ sư bàn giao và nhấn nút "Tạo báo cáo" để tự động tổng hợp tất cả các log sự vụ trong ca...</p>
                                 </div>
                             </div>
                         </div>
@@ -351,6 +356,6 @@
     </div>
 
     <!-- Script imports -->
-    <script src="app.js?v=1.1.9"></script>
+    <script src="app.js?v=1.2.0"></script>
 </body>
 </html>
