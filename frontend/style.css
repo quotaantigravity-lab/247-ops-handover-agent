@@ -1204,6 +1204,11 @@ body {
     background: rgba(255, 255, 255, 0.015);
 }
 
+.nagios-table .nagios-host {
+    font-weight: 600;
+    color: #fff;
+}
+
 .nagios-table .badge-state {
     display: inline-block;
     padding: 4px 10px;
@@ -1365,6 +1370,7 @@ body.light-theme .modal-header h3,
 body.light-theme .modal-body h3,
 body.light-theme .chat-form input,
 body.light-theme .nagios-table th,
+body.light-theme .nagios-table .nagios-host,
 body.light-theme .markdown-preview h1,
 body.light-theme .markdown-preview h2,
 body.light-theme .markdown-preview h3 {

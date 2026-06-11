@@ -761,7 +761,7 @@ function renderNagiosAlerts() {
             <tr>
                 <td>${stateBadge}</td>
                 <td>${alert.date}</td>
-                <td style="font-weight: 600; color: #fff;">${alert.host}</td>
+                <td class="nagios-host">${alert.host}</td>
                 <td style="font-family: monospace;">${alert.service}</td>
                 <td>${alert.message}</td>
                 <td style="text-align: center;">

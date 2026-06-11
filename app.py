@@ -553,6 +553,14 @@ def get_nagios_alerts():
             },
             {
                 "state": "CRITICAL",
+                "host": "elastic-search-01",
+                "service": "JVM Heap Usage",
+                "message": "CRITICAL - JVM Heap usage is 94.2% (Threshold > 90.0%)",
+                "date": (now - datetime.timedelta(minutes=9)).strftime("%Y-%m-%d %H:%M:%S"),
+                "raw_subject": "** PROBLEM Service Alert: elastic-search-01/JVM Heap Usage is CRITICAL **"
+            },
+            {
+                "state": "CRITICAL",
                 "host": "payment-db-replica",
                 "service": "Replication Lag",
                 "message": "CRITICAL - Replication lag is 125s (Threshold > 60s)",
@@ -577,6 +585,14 @@ def get_nagios_alerts():
             },
             {
                 "state": "WARNING",
+                "host": "nginx-ingress-controller",
+                "service": "HTTP 5xx Error Rate",
+                "message": "WARNING - HTTP 5xx errors: 2.1% (Threshold > 2.0%)",
+                "date": (now - datetime.timedelta(minutes=16)).strftime("%Y-%m-%d %H:%M:%S"),
+                "raw_subject": "** PROBLEM Service Alert: nginx-ingress-controller/HTTP 5xx Error Rate is WARNING **"
+            },
+            {
+                "state": "WARNING",
                 "host": "redis-cache-shared",
                 "service": "CPU Load",
                 "message": "WARNING - CPU Load is 81.2% (Threshold > 80.0%)",
@@ -590,6 +606,14 @@ def get_nagios_alerts():
                 "message": "HTTP CRITICAL: 504 Gateway Timeout on /v1/charge",
                 "date": (now - datetime.timedelta(minutes=22)).strftime("%Y-%m-%d %H:%M:%S"),
                 "raw_subject": "** PROBLEM Service Alert: payment-api-gateway/HTTP Response Time is CRITICAL **"
+            },
+            {
+                "state": "CRITICAL",
+                "host": "k8s-prod-node-01",
+                "service": "Disk Space",
+                "message": "CRITICAL - Disk space usage is 92.1% on /data (Threshold > 90.0%)",
+                "date": (now - datetime.timedelta(minutes=24)).strftime("%Y-%m-%d %H:%M:%S"),
+                "raw_subject": "** PROBLEM Service Alert: k8s-prod-node-01/Disk Space is CRITICAL **"
             },
             {
                 "state": "WARNING",
