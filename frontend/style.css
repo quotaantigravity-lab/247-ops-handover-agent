@@ -1150,3 +1150,10 @@ body {
 }
 .toast-info i { color: var(--color-blue); }
 
+/* Align handover inputs when labels wrap */
+.panel-handover .form-group label {
+    min-height: 32px;
+    display: flex;
+    align-items: flex-end;
+}
+
