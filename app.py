@@ -589,7 +589,19 @@ def chat_with_agent(req: ChatRequest):
             )
     system_logs_str = "\n".join(logs_summary)
     
-    # 2. Simple keyword matching over SOPs (RAG)
+    # 2. Fetch Nagios Alerts
+    try:
+        nagios_alerts = get_nagios_alerts()
+        nagios_alerts_summary = []
+        for alert in nagios_alerts:
+            nagios_alerts_summary.append(
+                f"- [Trạng thái: {alert['state']}] Host: {alert['host']} - Service: {alert['service']} - Message: {alert['message']} - Thời điểm: {alert['date']}"
+            )
+        nagios_str = "\n".join(nagios_alerts_summary)
+    except Exception as e:
+        nagios_str = f"Không thể lấy dữ liệu cảnh báo Nagios: {str(e)}"
+        
+    # 3. Simple keyword matching over SOPs (RAG)
     query_text = req.message.lower()
     matched_sops = []
     for sop in sops:
@@ -619,13 +631,17 @@ def chat_with_agent(req: ChatRequest):
             sops_parts.append(f"TÊN QUY TRÌNH: {sop['title']} (File: {sop['filename']})\nNỘI DUNG:\n{sop['content']}\n")
         sops_str = "\n---\n".join(sops_parts)
         
-    # 3. Construct System Prompt
+    # 4. Construct System Prompt
     system_prompt = (
         "Bạn là AI Trợ lý Trực ca 247 (247 Operations Duty Assistant) của hệ thống ZaloPay/VNG Cloud.\n"
-        "Nhiệm vụ của bạn là hỗ trợ kỹ sư trực ca vận hành hệ thống, tra cứu quy trình vận hành tiêu chuẩn (SOP), soạn thảo email thông báo sự cố (Incident Email) hoặc thông báo bảo trì, và giải đáp thắc mắc.\n\n"
+        "Nhiệm vụ của bạn là hỗ trợ kỹ sư trực ca vận hành hệ thống, tra cứu quy trình vận hành tiêu chuẩn (SOP), soạn thảo email thông báo sự cố (Incident Email) hoặc thông báo bảo trì, giải đáp thắc mắc, và kiểm tra tình trạng cảnh báo Nagios.\n\n"
         "Dữ liệu trạng thái hệ thống hiện tại trong ca trực:\n"
         "========================================\n"
         f"{system_logs_str}\n"
+        "========================================\n\n"
+        "Dữ liệu cảnh báo Nagios từ Email hiện tại:\n"
+        "========================================\n"
+        f"{nagios_str}\n"
         "========================================\n\n"
         "Tài liệu quy trình chuẩn (SOP) đối tác & hệ thống có liên quan:\n"
         "========================================\n"
@@ -643,7 +659,8 @@ def chat_with_agent(req: ChatRequest):
         "       + Trạng thái: [Trạng thái hiện tại]\n"
         "       + Mức độ ảnh hưởng: [Chi tiết ảnh hưởng]\n"
         "       + Đội vận hành đang phối hợp xử lý và sẽ cập nhật thêm thông tin.\n"
-        "4. Tuyệt đối không bịa đặt các thông tin kỹ thuật không có trong tài liệu quy trình."
+        "4. Tuyệt đối không bịa đặt các thông tin kỹ thuật không có trong tài liệu quy trình.\n"
+        "5. Khi người dùng hỏi về các cảnh báo Nagios (ví dụ: alert nào chưa recovery, alert nào đang critical), hãy sử dụng thông tin từ 'Dữ liệu cảnh báo Nagios từ Email hiện tại'. Cảnh báo 'chưa recovery' là những cảnh báo có trạng thái CRITICAL hoặc WARNING (chưa chuyển sang OK hoặc RECOVERY)."
     )
     
     # 4. Invoke GreenNode MaaS API
