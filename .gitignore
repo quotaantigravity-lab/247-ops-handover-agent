@@ -6,3 +6,5 @@ data/sops.json
 data/config.json
 temp_uploads/
 .claude/
+greennode-agentbase-skills/
+
