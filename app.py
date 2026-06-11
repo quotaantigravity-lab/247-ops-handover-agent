@@ -284,7 +284,7 @@ def update_sys_config(config_data: Dict[str, str]):
     return {"status": "success"}
 
 @app.get("/api/handover")
-def generate_handover():
+def generate_handover(sender: Optional[str] = None, receiver: Optional[str] = None):
     logs = read_json_file(LOGS_FILE)
     
     incidents_resolving = [l for l in logs if l["type"] == "incident" and l["status"] != "resolved"]
@@ -341,8 +341,11 @@ def generate_handover():
             report.append(f"   - **Nội dung:** {log['content']}")
             
     report.append(f"\n---")
-    report.append(f"\n*Người bàn giao: [Họ tên kỹ sư trực]*")
-    report.append(f"\n*Người nhận bàn giao: [Họ tên kỹ sư ca tiếp theo]*")
+    
+    sender_name = sender.strip() if (sender and sender.strip()) else "[Họ tên kỹ sư trực]"
+    receiver_name = receiver.strip() if (receiver and receiver.strip()) else "[Họ tên kỹ sư ca tiếp theo]"
+    report.append(f"\n*Người bàn giao: {sender_name}*")
+    report.append(f"\n*Người nhận bàn giao: {receiver_name}*")
     
     return {"markdown": "\n".join(report)}
 

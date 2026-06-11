@@ -29,6 +29,8 @@ const chatTriggers = document.querySelectorAll(".btn-trigger");
 const btnGenerateHandover = document.getElementById("btn-generate-handover");
 const btnCopyHandover = document.getElementById("btn-copy-handover");
 const handoverPreview = document.getElementById("handover-preview");
+const handoverSender = document.getElementById("handover-sender");
+const handoverReceiver = document.getElementById("handover-receiver");
 
 const settingsModal = document.getElementById("settings-modal");
 const btnOpenSettings = document.getElementById("btn-open-settings");
@@ -47,6 +49,18 @@ async function initApp() {
     await fetchConfig();
     await fetchLogs();
     await fetchSOPs();
+    loadHandoverEngineers();
+}
+
+function loadHandoverEngineers() {
+    if (handoverSender) {
+        const savedSender = localStorage.getItem("handover_sender");
+        if (savedSender) handoverSender.value = savedSender;
+    }
+    if (handoverReceiver) {
+        const savedReceiver = localStorage.getItem("handover_receiver");
+        if (savedReceiver) handoverReceiver.value = savedReceiver;
+    }
 }
 
 // Event Listeners Setup
@@ -451,9 +465,20 @@ function scrollToBottom() {
 
 // 5. Shift Handover Report
 async function handleGenerateHandover() {
+    const sender = handoverSender ? handoverSender.value.trim() : "";
+    const receiver = handoverReceiver ? handoverReceiver.value.trim() : "";
+    
+    // Save to localStorage for convenience
+    if (handoverSender) localStorage.setItem("handover_sender", sender);
+    if (handoverReceiver) localStorage.setItem("handover_receiver", receiver);
+
     try {
         showToast("Đang sinh báo cáo ca trực...", "info");
-        const res = await fetch("/api/handover");
+        const queryParams = new URLSearchParams();
+        if (sender) queryParams.append("sender", sender);
+        if (receiver) queryParams.append("receiver", receiver);
+        
+        const res = await fetch(`/api/handover?${queryParams.toString()}`);
         const data = await res.json();
         
         handoverPreview.innerHTML = renderMarkdown(data.markdown);
