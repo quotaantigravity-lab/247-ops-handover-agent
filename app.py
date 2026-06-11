@@ -544,6 +544,30 @@ def get_nagios_alerts():
                 "raw_subject": "** PROBLEM Service Alert: k8s-prod-node-03/Memory Usage is CRITICAL **"
             },
             {
+                "state": "CRITICAL",
+                "host": "redis-cache-shared",
+                "service": "CPU Load",
+                "message": "CRITICAL - CPU Load is 99.1% (Threshold > 90.0%)",
+                "date": (now - datetime.timedelta(minutes=8)).strftime("%Y-%m-%d %H:%M:%S"),
+                "raw_subject": "** PROBLEM Service Alert: redis-cache-shared/CPU Load is CRITICAL **"
+            },
+            {
+                "state": "CRITICAL",
+                "host": "payment-db-replica",
+                "service": "Replication Lag",
+                "message": "CRITICAL - Replication lag is 125s (Threshold > 60s)",
+                "date": (now - datetime.timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S"),
+                "raw_subject": "** PROBLEM Service Alert: payment-db-replica/Replication Lag is CRITICAL **"
+            },
+            {
+                "state": "CRITICAL",
+                "host": "redis-cache-shared",
+                "service": "CPU Load",
+                "message": "CRITICAL - CPU Load is 94.6% (Threshold > 90.0%)",
+                "date": (now - datetime.timedelta(minutes=12)).strftime("%Y-%m-%d %H:%M:%S"),
+                "raw_subject": "** PROBLEM Service Alert: redis-cache-shared/CPU Load is CRITICAL **"
+            },
+            {
                 "state": "WARNING",
                 "host": "db-postgres-master",
                 "service": "Connection Count",
@@ -552,12 +576,44 @@ def get_nagios_alerts():
                 "raw_subject": "** PROBLEM Service Alert: db-postgres-master/Connection Count is WARNING **"
             },
             {
+                "state": "WARNING",
+                "host": "redis-cache-shared",
+                "service": "CPU Load",
+                "message": "WARNING - CPU Load is 81.2% (Threshold > 80.0%)",
+                "date": (now - datetime.timedelta(minutes=18)).strftime("%Y-%m-%d %H:%M:%S"),
+                "raw_subject": "** PROBLEM Service Alert: redis-cache-shared/CPU Load is WARNING **"
+            },
+            {
                 "state": "CRITICAL",
                 "host": "payment-api-gateway",
                 "service": "HTTP Response Time",
                 "message": "HTTP CRITICAL: 504 Gateway Timeout on /v1/charge",
                 "date": (now - datetime.timedelta(minutes=22)).strftime("%Y-%m-%d %H:%M:%S"),
                 "raw_subject": "** PROBLEM Service Alert: payment-api-gateway/HTTP Response Time is CRITICAL **"
+            },
+            {
+                "state": "WARNING",
+                "host": "payment-db-replica",
+                "service": "Replication Lag",
+                "message": "WARNING - Replication lag: 15s (Threshold > 10s)",
+                "date": (now - datetime.timedelta(minutes=25)).strftime("%Y-%m-%d %H:%M:%S"),
+                "raw_subject": "** PROBLEM Service Alert: payment-db-replica/Replication Lag is WARNING **"
+            },
+            {
+                "state": "CRITICAL",
+                "host": "payment-api-gateway",
+                "service": "HTTP Response Time",
+                "message": "CRITICAL - response time 3.2s (Threshold > 3.0s)",
+                "date": (now - datetime.timedelta(minutes=28)).strftime("%Y-%m-%d %H:%M:%S"),
+                "raw_subject": "** PROBLEM Service Alert: payment-api-gateway/HTTP Response Time is CRITICAL **"
+            },
+            {
+                "state": "WARNING",
+                "host": "payment-api-gateway",
+                "service": "HTTP Response Time",
+                "message": "WARNING - response time 1.8s (Threshold > 1.5s)",
+                "date": (now - datetime.timedelta(minutes=35)).strftime("%Y-%m-%d %H:%M:%S"),
+                "raw_subject": "** PROBLEM Service Alert: payment-api-gateway/HTTP Response Time is WARNING **"
             },
             {
                 "state": "OK",
@@ -666,8 +722,8 @@ def chat_with_agent(req: ChatRequest):
         "       + Trạng thái: [Trạng thái hiện tại]\n"
         "       + Mức độ ảnh hưởng: [Chi tiết ảnh hưởng]\n"
         "       + Đội vận hành đang phối hợp xử lý và sẽ cập nhật thêm thông tin.\n"
-        "4. Tuyệt đối không bịa đặt các thông tin kỹ thuật không có trong tài liệu quy trình.\n"
-        "5. Khi người dùng hỏi về các cảnh báo Nagios (ví dụ: alert nào chưa recovery, alert nào đang critical), hãy sử dụng thông tin từ 'Dữ liệu cảnh báo Nagios từ Email hiện tại'. Cảnh báo 'chưa recovery' là những cảnh báo có trạng thái CRITICAL hoặc WARNING (chưa chuyển sang OK hoặc RECOVERY)."
+        "5. Khi người dùng hỏi về các cảnh báo Nagios (ví dụ: alert nào chưa recovery, alert nào đang critical), hãy sử dụng thông tin từ 'Dữ liệu cảnh báo Nagios từ Email hiện tại'. Cảnh báo 'chưa recovery' là những cảnh báo có trạng thái CRITICAL hoặc WARNING (chưa chuyển sang OK hoặc RECOVERY).\n"
+        "6. Khi người dùng hỏi về các alert tăng nhanh bất thường hoặc leo thang mức độ nghiêm trọng (Alert Spike), hãy phân tích danh sách Cảnh báo Nagios từ Email, tìm các host/service xuất hiện nhiều lần với thời gian gần nhau và có mức độ nghiêm trọng tăng tiến (ví dụ: chuyển từ WARNING sang CRITICAL, hoặc các chỉ số lỗi tăng mạnh trong tin nhắn cảnh báo), liệt kê rõ lịch trình thời gian leo thang và đưa ra cảnh báo khẩn cấp cho kỹ sư."
     )
     
     # 4. Invoke GreenNode MaaS API
