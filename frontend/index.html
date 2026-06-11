@@ -12,7 +12,7 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Main Style Sheet -->
-    <link rel="stylesheet" href="style.css?v=1.1.6">
+    <link rel="stylesheet" href="style.css?v=1.1.7">
 </head>
 <body>
     <div class="glass-bg-container"></div>
@@ -315,6 +315,11 @@
                         <input type="password" id="imap-pass-input" placeholder="Nhập mật khẩu hoặc App Password">
                         <small style="color: var(--text-muted); font-size: 0.72rem; line-height: 1.3;">Đối với Gmail, bạn cần bật Xác minh 2 bước và tạo Mật khẩu ứng dụng (App Password) để kết nối.</small>
                     </div>
+                    <div class="form-group">
+                        <label for="imap-filter-input">IMAP Search Filter (Bộ lọc thư)</label>
+                        <input type="text" id="imap-filter-input" placeholder="Ví dụ: (SUBJECT &quot;Nagios&quot;)">
+                        <small style="color: var(--text-muted); font-size: 0.72rem; line-height: 1.3;">Cú pháp IMAP Search. Mặc định: <code>(SUBJECT "Nagios")</code>. Có thể đổi thành <code>(FROM "nagios@yourdomain.com")</code>.</small>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -325,6 +330,6 @@
     </div>
 
     <!-- Script imports -->
-    <script src="app.js?v=1.1.6"></script>
+    <script src="app.js?v=1.1.7"></script>
 </body>
 </html>

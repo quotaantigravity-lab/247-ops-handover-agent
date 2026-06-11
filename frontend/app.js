@@ -40,6 +40,7 @@ const imapConfigFields = document.getElementById("imap-config-fields");
 const imapServerInput = document.getElementById("imap-server-input");
 const imapUserInput = document.getElementById("imap-user-input");
 const imapPassInput = document.getElementById("imap-pass-input");
+const imapFilterInput = document.getElementById("imap-filter-input");
 
 const settingsModal = document.getElementById("settings-modal");
 const btnOpenSettings = document.getElementById("btn-open-settings");
@@ -114,6 +115,9 @@ function setupEventListeners() {
             imapServerInput.value = apiConfig.imap_server || "imap.gmail.com";
             imapUserInput.value = apiConfig.imap_user || "";
             imapPassInput.value = apiConfig.imap_pass || "";
+            if (imapFilterInput) {
+                imapFilterInput.value = apiConfig.imap_filter || '(SUBJECT "Nagios")';
+            }
             toggleImapFieldsVisibility();
         }
         settingsModal.classList.add("active");
@@ -198,6 +202,9 @@ async function fetchConfig() {
             imapServerInput.value = apiConfig.imap_server || "imap.gmail.com";
             imapUserInput.value = apiConfig.imap_user || "";
             imapPassInput.value = apiConfig.imap_pass || "";
+            if (imapFilterInput) {
+                imapFilterInput.value = apiConfig.imap_filter || '(SUBJECT "Nagios")';
+            }
             toggleImapFieldsVisibility();
         }
     } catch (err) {
@@ -211,6 +218,7 @@ async function handleSaveSettings() {
     const imapServer = imapServerInput ? imapServerInput.value.trim() : "imap.gmail.com";
     const imapUser = imapUserInput ? imapUserInput.value.trim() : "";
     const imapPass = imapPassInput ? imapPassInput.value.trim() : "";
+    const imapFilter = imapFilterInput ? imapFilterInput.value.trim() : '(SUBJECT "Nagios")';
 
     try {
         const res = await fetch("/api/config", {
@@ -221,7 +229,8 @@ async function handleSaveSettings() {
                 imap_enabled: imapEnabled,
                 imap_server: imapServer,
                 imap_user: imapUser,
-                imap_pass: imapPass
+                imap_pass: imapPass,
+                imap_filter: imapFilter
             })
         });
         if (res.ok) {
@@ -230,6 +239,7 @@ async function handleSaveSettings() {
             apiConfig.imap_server = imapServer;
             apiConfig.imap_user = imapUser;
             apiConfig.imap_pass = imapPass;
+            apiConfig.imap_filter = imapFilter;
             showToast("Đã lưu cấu hình thành công!", "success");
             settingsModal.classList.remove("active");
             await fetchNagiosAlerts();

@@ -46,7 +46,8 @@ if not os.path.exists(CONFIG_FILE):
             "imap_server": "imap.gmail.com",
             "imap_user": "",
             "imap_pass": "",
-            "imap_enabled": False
+            "imap_enabled": False,
+            "imap_filter": '(SUBJECT "Nagios")'
         }, f, indent=2)
 
 # File DB functions
@@ -70,7 +71,8 @@ def read_config() -> Dict[str, Any]:
         "imap_server": "imap.gmail.com",
         "imap_user": "",
         "imap_pass": "",
-        "imap_enabled": False
+        "imap_enabled": False,
+        "imap_filter": '(SUBJECT "Nagios")'
     }
     try:
         if os.path.exists(CONFIG_FILE):
@@ -276,7 +278,8 @@ def get_sys_config():
         "imap_server": config.get("imap_server", "imap.gmail.com"),
         "imap_user": config.get("imap_user", ""),
         "imap_pass": masked_imap_pass,
-        "imap_enabled": config.get("imap_enabled", False)
+        "imap_enabled": config.get("imap_enabled", False),
+        "imap_filter": config.get("imap_filter", '(SUBJECT "Nagios")')
     }
 
 @app.post("/api/config")
@@ -291,7 +294,8 @@ def update_sys_config(config_data: Dict[str, Any]):
         "imap_server": "imap.gmail.com",
         "imap_user": "",
         "imap_pass": "",
-        "imap_enabled": False
+        "imap_enabled": False,
+        "imap_filter": '(SUBJECT "Nagios")'
     }
     try:
         if os.path.exists(CONFIG_FILE):
@@ -321,6 +325,8 @@ def update_sys_config(config_data: Dict[str, Any]):
             local_config["imap_pass"] = ""
     if "imap_enabled" in config_data:
         local_config["imap_enabled"] = bool(config_data["imap_enabled"])
+    if "imap_filter" in config_data:
+        local_config["imap_filter"] = config_data["imap_filter"]
         
     write_config(local_config)
     return {"status": "success"}
@@ -466,6 +472,7 @@ def get_nagios_alerts():
     imap_server = config.get("imap_server", "imap.gmail.com")
     imap_user = config.get("imap_user", "")
     imap_pass = config.get("imap_pass", "")
+    imap_filter = config.get("imap_filter", '(SUBJECT "Nagios")')
     
     alerts = []
     
@@ -479,8 +486,8 @@ def get_nagios_alerts():
             mail.login(imap_user, imap_pass)
             mail.select("INBOX")
             
-            # Search for emails containing "Nagios"
-            status, messages = mail.search(None, '(SUBJECT "Nagios")')
+            # Search for emails using custom filter
+            status, messages = mail.search(None, imap_filter)
             if status == 'OK':
                 mail_ids = messages[0].split()
                 # Get latest 10
