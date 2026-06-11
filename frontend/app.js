@@ -3,6 +3,7 @@ let logsState = [];
 let sopsState = [];
 let apiConfig = { api_key: "", model_name: "minimax/minimax-m2.5" };
 let chatHistory = [];
+let nagiosAlertsState = [];
 
 // DOM Elements
 const logForm = document.getElementById("form-add-log");
@@ -32,6 +33,14 @@ const handoverPreview = document.getElementById("handover-preview");
 const handoverSender = document.getElementById("handover-sender");
 const handoverReceiver = document.getElementById("handover-receiver");
 
+const btnRefreshNagios = document.getElementById("btn-refresh-nagios");
+const nagiosAlertsTbody = document.getElementById("nagios-alerts-tbody");
+const imapEnabledInput = document.getElementById("imap-enabled-input");
+const imapConfigFields = document.getElementById("imap-config-fields");
+const imapServerInput = document.getElementById("imap-server-input");
+const imapUserInput = document.getElementById("imap-user-input");
+const imapPassInput = document.getElementById("imap-pass-input");
+
 const settingsModal = document.getElementById("settings-modal");
 const btnOpenSettings = document.getElementById("btn-open-settings");
 const btnCloseSettings = document.getElementById("btn-close-settings");
@@ -50,6 +59,7 @@ async function initApp() {
     await fetchLogs();
     await fetchSOPs();
     loadHandoverEngineers();
+    await fetchNagiosAlerts();
 }
 
 function loadHandoverEngineers() {
@@ -99,12 +109,23 @@ function setupEventListeners() {
     // Settings Modal
     btnOpenSettings.addEventListener("click", () => {
         apiKeyInput.value = apiConfig.api_key;
+        if (imapEnabledInput) {
+            imapEnabledInput.checked = apiConfig.imap_enabled || false;
+            imapServerInput.value = apiConfig.imap_server || "imap.gmail.com";
+            imapUserInput.value = apiConfig.imap_user || "";
+            imapPassInput.value = apiConfig.imap_pass || "";
+            toggleImapFieldsVisibility();
+        }
         settingsModal.classList.add("active");
     });
     const closeModal = () => settingsModal.classList.remove("active");
     btnCloseSettings.addEventListener("click", closeModal);
     btnCancelSettings.addEventListener("click", closeModal);
     btnSaveSettings.addEventListener("click", handleSaveSettings);
+    
+    if (imapEnabledInput) {
+        imapEnabledInput.addEventListener("change", toggleImapFieldsVisibility);
+    }
 
     // File Upload Click
     btnSelectFile.addEventListener("click", () => fileInput.click());
@@ -145,6 +166,21 @@ function setupEventListeners() {
     // Handover actions
     btnGenerateHandover.addEventListener("click", handleGenerateHandover);
     btnCopyHandover.addEventListener("click", handleCopyHandover);
+    
+    // Nagios Refresh
+    if (btnRefreshNagios) {
+        btnRefreshNagios.addEventListener("click", fetchNagiosAlerts);
+    }
+}
+
+function toggleImapFieldsVisibility() {
+    if (imapEnabledInput && imapConfigFields) {
+        if (imapEnabledInput.checked) {
+            imapConfigFields.style.display = "flex";
+        } else {
+            imapConfigFields.style.display = "none";
+        }
+    }
 }
 
 // API Calls & Event Handlers
@@ -157,6 +193,13 @@ async function fetchConfig() {
         if (apiConfig.api_key) {
             apiKeyInput.value = apiConfig.api_key;
         }
+        if (imapEnabledInput) {
+            imapEnabledInput.checked = apiConfig.imap_enabled || false;
+            imapServerInput.value = apiConfig.imap_server || "imap.gmail.com";
+            imapUserInput.value = apiConfig.imap_user || "";
+            imapPassInput.value = apiConfig.imap_pass || "";
+            toggleImapFieldsVisibility();
+        }
     } catch (err) {
         console.error("Error fetching config:", err);
     }
@@ -164,16 +207,32 @@ async function fetchConfig() {
 
 async function handleSaveSettings() {
     const newApiKey = apiKeyInput.value.trim();
+    const imapEnabled = imapEnabledInput ? imapEnabledInput.checked : false;
+    const imapServer = imapServerInput ? imapServerInput.value.trim() : "imap.gmail.com";
+    const imapUser = imapUserInput ? imapUserInput.value.trim() : "";
+    const imapPass = imapPassInput ? imapPassInput.value.trim() : "";
+
     try {
         const res = await fetch("/api/config", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ api_key: newApiKey })
+            body: JSON.stringify({
+                api_key: newApiKey,
+                imap_enabled: imapEnabled,
+                imap_server: imapServer,
+                imap_user: imapUser,
+                imap_pass: imapPass
+            })
         });
         if (res.ok) {
             apiConfig.api_key = newApiKey;
-            showToast("Đã lưu cấu hình API Key thành công!", "success");
+            apiConfig.imap_enabled = imapEnabled;
+            apiConfig.imap_server = imapServer;
+            apiConfig.imap_user = imapUser;
+            apiConfig.imap_pass = imapPass;
+            showToast("Đã lưu cấu hình thành công!", "success");
             settingsModal.classList.remove("active");
+            await fetchNagiosAlerts();
         } else {
             showToast("Lỗi khi lưu cấu hình.", "error");
         }
@@ -605,3 +664,108 @@ function showToast(message, type = "info") {
 window.handleResolveLog = handleResolveLog;
 window.handleDeleteLog = handleDeleteLog;
 window.handleDeleteSOP = handleDeleteSOP;
+
+// Nagios Alert Helpers
+async function fetchNagiosAlerts() {
+    if (!nagiosAlertsTbody) return;
+    
+    nagiosAlertsTbody.innerHTML = `
+        <tr>
+            <td colspan="6" class="no-data" style="padding: 20px; text-align: center;">
+                <i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu cảnh báo email...
+            </td>
+        </tr>
+    `;
+    
+    try {
+        const res = await fetch("/api/nagios-alerts");
+        if (res.ok) {
+            nagiosAlertsState = await res.json();
+            renderNagiosAlerts();
+        } else {
+            nagiosAlertsTbody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="no-data" style="padding: 20px; text-align: center; color: var(--color-red);">
+                        <i class="fa-solid fa-circle-exclamation"></i> Không thể kết nối lấy cảnh báo email.
+                    </td>
+                </tr>
+            `;
+        }
+    } catch (err) {
+        console.error("Error fetching Nagios alerts:", err);
+        nagiosAlertsTbody.innerHTML = `
+            <tr>
+                <td colspan="6" class="no-data" style="padding: 20px; text-align: center; color: var(--color-red);">
+                    <i class="fa-solid fa-circle-exclamation"></i> Lỗi kết nối hệ thống.
+                </td>
+            </tr>
+        `;
+    }
+}
+
+function renderNagiosAlerts() {
+    if (!nagiosAlertsTbody) return;
+    if (nagiosAlertsState.length === 0) {
+        nagiosAlertsTbody.innerHTML = `
+            <tr>
+                <td colspan="6" class="no-data" style="padding: 20px; text-align: center;">
+                    <i class="fa-regular fa-envelope"></i> Không tìm thấy email cảnh báo Nagios nào.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    nagiosAlertsTbody.innerHTML = nagiosAlertsState.map((alert, idx) => {
+        const stateClass = alert.state.toLowerCase();
+        let stateBadge = `<span class="badge-state ${stateClass}">${alert.state}</span>`;
+        
+        return `
+            <tr>
+                <td>${stateBadge}</td>
+                <td>${alert.date}</td>
+                <td style="font-weight: 600; color: #fff;">${alert.host}</td>
+                <td style="font-family: monospace;">${alert.service}</td>
+                <td>${alert.message}</td>
+                <td style="text-align: center;">
+                    <button class="btn-import" onclick="handleImportNagiosAlert(${idx})" title="Ghi nhận vào ca trực">
+                        <i class="fa-solid fa-plus-circle"></i> Ghi nhận nhanh
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join("");
+}
+
+function handleImportNagiosAlert(idx) {
+    const alert = nagiosAlertsState[idx];
+    if (!alert) return;
+    
+    // Fill the add log form
+    logComponent.value = alert.host;
+    logType.value = "incident";
+    
+    if (alert.state === "CRITICAL") {
+        logSeverity.value = "high";
+        logStatus.value = "resolving";
+    } else if (alert.state === "WARNING") {
+        logSeverity.value = "medium";
+        logStatus.value = "resolving";
+    } else if (alert.state === "OK") {
+        logSeverity.value = "low";
+        logStatus.value = "resolved";
+    }
+    
+    logContent.value = `[NAGIOS ALERT] Dịch vụ: ${alert.service} có trạng thái ${alert.state}\n- Chi tiết: ${alert.message}\n- Thời điểm: ${alert.date}`;
+    
+    showToast(`Đã tự động điền cảnh báo của ${alert.host}! Vui lòng kiểm tra lại biểu mẫu Nhật ký bên trái.`, "success");
+    
+    // Scroll smoothly to logs panel
+    const logsPanel = document.getElementById("panel-logs");
+    if (logsPanel) {
+        logsPanel.scrollIntoView({ behavior: "smooth" });
+    }
+}
+
+window.handleImportNagiosAlert = handleImportNagiosAlert;
+window.fetchNagiosAlerts = fetchNagiosAlerts;

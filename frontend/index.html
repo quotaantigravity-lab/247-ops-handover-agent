@@ -180,6 +180,41 @@
                         </div>
                     </section>
                 </div>
+                
+                <!-- Nagios Email Alerts Panel -->
+                <section class="panel panel-nagios" id="panel-nagios" style="margin-top: 20px;">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-envelope-open-text" style="color: #ef4444;"></i> Cảnh Báo Nagios Từ Email</h2>
+                        <div class="nagios-actions">
+                            <button class="btn btn-secondary btn-sm" id="btn-refresh-nagios">
+                                <i class="fa-solid fa-arrows-rotate"></i> Làm mới
+                            </button>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="padding: 0; overflow-x: auto;">
+                        <div class="nagios-table-container">
+                            <table class="nagios-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 110px;">Trạng thái</th>
+                                        <th style="width: 150px;">Thời gian</th>
+                                        <th style="width: 150px;">Thiết bị / Host</th>
+                                        <th style="width: 150px;">Dịch vụ / Service</th>
+                                        <th>Thông tin chi tiết</th>
+                                        <th style="width: 120px; text-align: center;">Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="nagios-alerts-tbody">
+                                    <tr>
+                                        <td colspan="6" class="no-data" style="padding: 20px; text-align: center;">
+                                            <i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu cảnh báo email...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
             </div>
 
             <!-- Tab 2: Chatbot AI -->
@@ -253,6 +288,33 @@
                     <i class="fa-solid fa-circle-info"></i>
                     <span>API Key sẽ được lưu trữ cục bộ bảo mật trên server của bạn để phục vụ các yêu cầu chat.</span>
                 </div>
+                
+                <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+                
+                <h3 style="font-family: var(--font-heading); font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-envelope" style="color: #10b981;"></i> Cấu Hình Email Alerts (IMAP)
+                </h3>
+                
+                <div class="form-group" style="flex-direction: row; align-items: center; gap: 10px; margin-bottom: 12px;">
+                    <input type="checkbox" id="imap-enabled-input" style="width: auto; margin: 0; cursor: pointer;">
+                    <label for="imap-enabled-input" style="margin: 0; cursor: pointer; font-size: 0.85rem; font-weight: 500;">Kích hoạt đồng bộ Email Alert Nagios</label>
+                </div>
+                
+                <div id="imap-config-fields" style="display: none; flex-direction: column; gap: 12px;">
+                    <div class="form-group">
+                        <label for="imap-server-input">IMAP Server Address</label>
+                        <input type="text" id="imap-server-input" placeholder="Ví dụ: imap.gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="imap-user-input">Email Account</label>
+                        <input type="email" id="imap-user-input" placeholder="Username hoặc email đăng nhập">
+                    </div>
+                    <div class="form-group">
+                        <label for="imap-pass-input">Password / App Password</label>
+                        <input type="password" id="imap-pass-input" placeholder="Nhập mật khẩu hoặc App Password">
+                        <small style="color: var(--text-muted); font-size: 0.72rem; line-height: 1.3;">Đối với Gmail, bạn cần bật Xác minh 2 bước và tạo Mật khẩu ứng dụng (App Password) để kết nối.</small>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" id="btn-cancel-settings">Hủy</button>
@@ -262,6 +324,6 @@
     </div>
 
     <!-- Script imports -->
-    <script src="app.js?v=1.1.4"></script>
+    <script src="app.js?v=1.1.5"></script>
 </body>
 </html>
