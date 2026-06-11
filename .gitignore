@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.env
+data/logs.json
+data/sops.json
+data/config.json
+temp_uploads/
+.claude/

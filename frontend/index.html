@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>247 Operations Shift Handover Assistant - AI Agent</title>
+    <meta name="description" content="AI Agent hỗ trợ quản lý ca trực, tra cứu quy trình vận hành và tạo báo cáo bàn giao ca tự động cho đội vận hành ZaloPay/VNG Cloud.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="glass-bg-container"></div>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header" id="app-header">
+            <div class="header-logo">
+                <div class="logo-icon"><i class="fa-solid fa-server"></i></div>
+                <div class="logo-text">
+                    <h1>247 Ops Assistant</h1>
+                    <p>AI-Powered Duty Management & Handover System</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="status-indicator">
+                    <span class="pulse-dot green"></span>
+                    <span class="status-text">System Normal</span>
+                </div>
+                <button class="btn btn-secondary btn-icon" id="btn-open-settings" title="Cấu hình hệ thống">
+                    <i class="fa-solid fa-gear"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Grid -->
+        <main class="main-content-grid">
+            <!-- Left Column: Log Incident & Maintenance -->
+            <section class="panel panel-logs" id="panel-logs">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-clock-rotate-left"></i> Nhật Ký Ca Trực</h2>
+                    <span class="badge" id="logs-count">0 logs</span>
+                </div>
+                <div class="panel-body">
+                    <!-- Add Log Form -->
+                    <form id="form-add-log" class="form-add-log">
+                        <div class="form-row split">
+                            <div class="form-group">
+                                <label for="log-component">Hệ thống / Kênh đối tác</label>
+                                <input type="text" id="log-component" required placeholder="Ví dụ: BIDV, Napas, VietQR, ZaloPay">
+                            </div>
+                            <div class="form-group">
+                                <label for="log-type">Loại log</label>
+                                <select id="log-type">
+                                    <option value="incident">Sự cố (Incident)</option>
+                                    <option value="maintenance">Bảo trì (Maintenance)</option>
+                                    <option value="note">Ghi chú (Note)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row split">
+                            <div class="form-group">
+                                <label for="log-severity">Mức độ nghiêm trọng</label>
+                                <select id="log-severity">
+                                    <option value="low">Thấp (Low)</option>
+                                    <option value="medium" selected>Trung bình (Medium)</option>
+                                    <option value="high">Nghiêm trọng (High)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="log-status">Trạng thái xử lý</label>
+                                <select id="log-status">
+                                    <option value="resolving" selected>Đang xử lý (Resolving)</option>
+                                    <option value="resolved">Đã khắc phục (Resolved)</option>
+                                    <option value="pending">Theo dõi/Chờ (Pending)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="log-content">Chi tiết nội dung sự vụ</label>
+                            <textarea id="log-content" required rows="3" placeholder="Mô tả sự cố, các lỗi gặp phải, mức độ ảnh hưởng và hành động đã xử lý..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="btn-save-log">
+                            <i class="fa-solid fa-plus"></i> Ghi nhận log ca trực
+                        </button>
+                    </form>
+
+                    <!-- Active Logs List -->
+                    <div class="logs-list-container">
+                        <h3>Danh sách sự vụ trong ca</h3>
+                        <div class="logs-list-scroll">
+                            <div id="logs-list" class="logs-list">
+                                <!-- Dynamic logs go here -->
+                                <div class="no-data"><i class="fa-solid fa-clipboard-list"></i> Chưa có sự vụ nào được ghi nhận.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Middle Column: SOPs Knowledge Base -->
+            <section class="panel panel-knowledge" id="panel-knowledge">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-book-bookmark"></i> SOPs Knowledge Base</h2>
+                    <span class="badge" id="sops-count">0 quy trình</span>
+                </div>
+                <div class="panel-body">
+                    <!-- Drop Zone Upload -->
+                    <div id="drop-zone" class="drop-zone">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <p>Kéo & thả file quy trình vào đây</p>
+                        <span>Hỗ trợ file PDF, Word, Excel, TXT</span>
+                        <input type="file" id="file-input" accept=".txt,.pdf,.docx,.xlsx" style="display: none;">
+                        <button type="button" class="btn btn-secondary btn-sm" id="btn-select-file">Chọn file</button>
+                    </div>
+
+                    <!-- SOP Document List -->
+                    <div class="sop-list-container">
+                        <h3>Danh sách quy trình chuẩn đã nạp</h3>
+                        <div class="sop-list-scroll">
+                            <div id="sop-list" class="sop-list">
+                                <!-- Dynamic SOPs list -->
+                                <div class="no-data"><i class="fa-regular fa-folder-open"></i> Chưa tải lên tài liệu SOP nào.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Column: AI Chatbot Panel -->
+            <section class="panel panel-chat" id="panel-chat">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-robot"></i> Trợ Lý Trực Ca AI</h2>
+                    <span class="badge badge-ai"><i class="fa-solid fa-microchip"></i> Minimax m2.5</span>
+                </div>
+                <div class="panel-body">
+                    <!-- Chat Triggers -->
+                    <div class="chat-triggers">
+                        <button class="btn-trigger" data-query="Soạn giúp tôi email cảnh báo sự cố chuẩn cho ca trực hiện tại"><i class="fa-solid fa-envelope"></i> Soạn Mail Sự cố</button>
+                        <button class="btn-trigger" data-query="Tóm tắt tình hình các lỗi đang xảy ra trong ca trực"><i class="fa-solid fa-align-left"></i> Tóm tắt ca trực</button>
+                        <button class="btn-trigger" data-query="Quy trình xử lý khi ngân hàng BIDV bảo trì đột xuất là gì?"><i class="fa-solid fa-question"></i> Hướng dẫn BIDV</button>
+                    </div>
+
+                    <!-- Chat Messages Window -->
+                    <div class="chat-messages-container" id="chat-messages-container">
+                        <div class="chat-messages" id="chat-messages">
+                            <div class="message assistant">
+                                <div class="msg-avatar"><i class="fa-solid fa-headset"></i></div>
+                                <div class="msg-content">
+                                    <p>Xin chào! Tôi là Trợ lý AI ca trực. Tôi có thể giúp bạn:</p>
+                                    <ul>
+                                        <li>Tra cứu quy trình chuẩn (SOP) từ tài liệu bạn tải lên.</li>
+                                        <li>Soạn thảo Email cảnh báo lỗi (Incident) theo đúng các log đang diễn ra.</li>
+                                        <li>Tóm tắt các vấn đề tồn đọng trong ca.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Input Form -->
+                    <form id="chat-form" class="chat-form">
+                        <input type="text" id="chat-input" placeholder="Hỏi AI về quy trình, soạn mail, tóm tắt sự cố..." required autocomplete="off">
+                        <button type="submit" class="btn btn-primary btn-icon" id="btn-send-message">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom Section: Handover Report Generator -->
+        <section class="panel panel-handover" id="panel-handover">
+            <div class="panel-header">
+                <h2><i class="fa-solid fa-file-signature"></i> Tạo Báo Cáo Bàn Giao Ca</h2>
+                <div class="handover-actions">
+                    <button class="btn btn-secondary" id="btn-generate-handover">
+                        <i class="fa-solid fa-arrows-rotate"></i> Tạo báo cáo mới
+                    </button>
+                    <button class="btn btn-primary" id="btn-copy-handover">
+                        <i class="fa-regular fa-copy"></i> Sao chép nội dung
+                    </button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="handover-preview-container">
+                    <div class="markdown-preview" id="handover-preview">
+                        <p class="preview-placeholder">Nhấn nút "Tạo báo cáo mới" ở trên để tự động tổng hợp tất cả các log sự vụ trong ca thành một báo cáo bàn giao chuẩn Markdown...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settings-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-gears"></i> Cấu Hình GreenNode AI</h3>
+                <button class="modal-close" id="btn-close-settings"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="api-key-input">GreenNode API Key</label>
+                    <input type="password" id="api-key-input" placeholder="vn-WF8_Y4YP_ZGMt3Ycmb5ol8jE7S_dT86c0e...">
+                    <small>Cung cấp mã API Key của bạn từ cổng GreenNode AI Platform để kích hoạt dịch vụ Model-as-a-Service.</small>
+                </div>
+                <div class="form-group">
+                    <label for="model-select">AI Model</label>
+                    <select id="model-select" disabled>
+                        <option value="minimax/minimax-m2.5" selected>minimax/minimax-m2.5 (Locked)</option>
+                    </select>
+                </div>
+                <div class="modal-alert-info">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>API Key sẽ được lưu trữ cục bộ bảo mật trên server của bạn để phục vụ các yêu cầu chat.</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="btn-cancel-settings">Hủy</button>
+                <button class="btn btn-primary" id="btn-save-settings">Lưu cấu hình</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script imports -->
+    <script src="app.js"></script>
+</body>
+</html>
