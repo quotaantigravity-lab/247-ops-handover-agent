@@ -12,7 +12,7 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Main Style Sheet -->
-    <link rel="stylesheet" href="style.css?v=1.1.8">
+    <link rel="stylesheet" href="style.css?v=1.1.9">
 </head>
 <body>
     <div class="glass-bg-container"></div>
@@ -318,9 +318,16 @@
                         <input type="email" id="imap-user-input" placeholder="Username hoặc email đăng nhập">
                     </div>
                     <div class="form-group">
-                        <label for="imap-pass-input">Password / App Password</label>
+                        <div class="form-group-header">
+                            <label for="imap-pass-input">Password / App Password</label>
+                            <span class="suggestions-container">
+                                Lấy App Pass: 
+                                <a href="https://myaccount.google.com/apppasswords" target="_blank" class="suggestion-link">Gmail</a> | 
+                                <a href="https://mysignins.microsoft.com/security-info" target="_blank" class="suggestion-link">Outlook</a>
+                            </span>
+                        </div>
                         <input type="password" id="imap-pass-input" placeholder="Nhập mật khẩu hoặc App Password">
-                        <small style="color: var(--text-muted); font-size: 0.72rem; line-height: 1.3;">Đối với Gmail, bạn cần bật Xác minh 2 bước và tạo Mật khẩu ứng dụng (App Password) để kết nối.</small>
+                        <small style="color: var(--text-muted); font-size: 0.72rem; line-height: 1.3;">Đối với Gmail và Outlook/O365, bạn cần sử dụng Mật khẩu ứng dụng (App Password) nếu tài khoản bật xác thực 2 bước (MFA).</small>
                     </div>
                     <div class="form-group">
                         <div class="form-group-header">
@@ -344,6 +351,6 @@
     </div>
 
     <!-- Script imports -->
-    <script src="app.js?v=1.1.8"></script>
+    <script src="app.js?v=1.1.9"></script>
 </body>
 </html>
