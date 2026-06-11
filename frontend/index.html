@@ -37,12 +37,21 @@
             </div>
         </header>
 
-        <!-- Main Content Grid -->
-        <main class="main-layout">
-            <!-- Left Section: Inputs & Report -->
-            <div class="left-section">
-                <!-- Top Row: Logs & SOPs -->
-                <div class="top-row-grid">
+        <!-- Tab Navigation Bar -->
+        <div class="tab-navigation">
+            <button class="tab-btn active" data-tab="tab-inputs">
+                <i class="fa-solid fa-folder-open"></i> Quản lý Ca trực (Logs & SOPs)
+            </button>
+            <button class="tab-btn" data-tab="tab-chat">
+                <i class="fa-solid fa-robot"></i> Trợ lý Trực ca AI
+            </button>
+        </div>
+
+        <!-- Tab Content Panes -->
+        <div class="tab-content">
+            <!-- Tab 1: Inputs & Báo cáo -->
+            <div class="tab-pane active" id="tab-inputs">
+                <div class="inputs-layout-grid">
                     <!-- Log Incident & Maintenance -->
                     <section class="panel panel-logs" id="panel-logs">
                         <div class="panel-header">
@@ -137,75 +146,77 @@
                             </div>
                         </div>
                     </section>
-                </div>
 
-                <!-- Handover Report Generator -->
-                <section class="panel panel-handover" id="panel-handover">
-                    <div class="panel-header">
-                        <h2><i class="fa-solid fa-file-signature"></i> Tạo Báo Cáo Bàn Giao Ca</h2>
-                        <div class="handover-actions">
-                            <button class="btn btn-secondary" id="btn-generate-handover">
-                                <i class="fa-solid fa-arrows-rotate"></i> Tạo báo cáo mới
-                            </button>
-                            <button class="btn btn-primary" id="btn-copy-handover">
-                                <i class="fa-regular fa-copy"></i> Sao chép nội dung
-                            </button>
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="handover-preview-container">
-                            <div class="markdown-preview" id="handover-preview">
-                                <p class="preview-placeholder">Nhấn nút "Tạo báo cáo mới" ở trên để tự động tổng hợp tất cả các log sự vụ trong ca thành một báo cáo bàn giao chuẩn Markdown...</p>
+                    <!-- Handover Report Generator -->
+                    <section class="panel panel-handover" id="panel-handover">
+                        <div class="panel-header">
+                            <h2><i class="fa-solid fa-file-signature"></i> Tạo Báo Cáo Bàn Giao Ca</h2>
+                            <div class="handover-actions">
+                                <button class="btn btn-secondary" id="btn-generate-handover">
+                                    <i class="fa-solid fa-arrows-rotate"></i> Tạo báo cáo mới
+                                </button>
+                                <button class="btn btn-primary" id="btn-copy-handover">
+                                    <i class="fa-regular fa-copy"></i> Sao chép nội dung
+                                </button>
                             </div>
                         </div>
-                    </div>
-                </section>
-            </div>
-
-            <!-- Right Section: Chatbot -->
-            <div class="right-section">
-                <!-- AI Chatbot Panel -->
-                <section class="panel panel-chat" id="panel-chat">
-                    <div class="panel-header">
-                        <h2><i class="fa-solid fa-robot"></i> Trợ Lý Trực Ca AI</h2>
-                        <span class="badge badge-ai"><i class="fa-solid fa-microchip"></i> Minimax m2.5</span>
-                    </div>
-                    <div class="panel-body">
-                        <!-- Chat Triggers -->
-                        <div class="chat-triggers">
-                            <button class="btn-trigger" data-query="Soạn giúp tôi email cảnh báo sự cố chuẩn cho ca trực hiện tại"><i class="fa-solid fa-envelope"></i> Soạn Mail Sự cố</button>
-                            <button class="btn-trigger" data-query="Tóm tắt tình hình các lỗi đang xảy ra trong ca trực"><i class="fa-solid fa-align-left"></i> Tóm tắt ca trực</button>
-                            <button class="btn-trigger" data-query="Quy trình xử lý khi ngân hàng BIDV bảo trì đột xuất là gì?"><i class="fa-solid fa-question"></i> Hướng dẫn BIDV</button>
-                        </div>
-
-                        <!-- Chat Messages Window -->
-                        <div class="chat-messages-container" id="chat-messages-container">
-                            <div class="chat-messages" id="chat-messages">
-                                <div class="message assistant">
-                                    <div class="msg-avatar"><i class="fa-solid fa-headset"></i></div>
-                                    <div class="msg-content">
-                                        <p>Xin chào! Tôi là Trợ lý AI ca trực. Tôi có thể giúp bạn:</p>
-                                        <ul>
-                                            <li>Tra cứu quy trình chuẩn (SOP) từ tài liệu bạn tải lên.</li>
-                                            <li>Soạn thảo Email cảnh báo lỗi (Incident) theo đúng các log đang diễn ra.</li>
-                                            <li>Tóm tắt các vấn đề tồn đọng trong ca.</li>
-                                        </ul>
-                                    </div>
+                        <div class="panel-body">
+                            <div class="handover-preview-container">
+                                <div class="markdown-preview" id="handover-preview">
+                                    <p class="preview-placeholder">Nhấn nút "Tạo báo cáo mới" ở trên để tự động tổng hợp tất cả các log sự vụ trong ca thành một báo cáo bàn giao chuẩn Markdown...</p>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Chat Input Form -->
-                        <form id="chat-form" class="chat-form">
-                            <input type="text" id="chat-input" placeholder="Hỏi AI về quy trình, soạn mail, tóm tắt sự cố..." required autocomplete="off">
-                            <button type="submit" class="btn btn-primary btn-icon" id="btn-send-message">
-                                <i class="fa-solid fa-paper-plane"></i>
-                            </button>
-                        </form>
-                    </div>
-                </section>
+                    </section>
+                </div>
             </div>
-        </main>
+
+            <!-- Tab 2: Chatbot AI -->
+            <div class="tab-pane" id="tab-chat">
+                <div class="chat-layout-container">
+                    <!-- AI Chatbot Panel -->
+                    <section class="panel panel-chat" id="panel-chat">
+                        <div class="panel-header">
+                            <h2><i class="fa-solid fa-robot"></i> Trợ Lý Trực Ca AI</h2>
+                            <span class="badge badge-ai"><i class="fa-solid fa-microchip"></i> Minimax m2.5</span>
+                        </div>
+                        <div class="panel-body">
+                            <!-- Chat Triggers -->
+                            <div class="chat-triggers">
+                                <button class="btn-trigger" data-query="Soạn giúp tôi email cảnh báo sự cố chuẩn cho ca trực hiện tại"><i class="fa-solid fa-envelope"></i> Soạn Mail Sự cố</button>
+                                <button class="btn-trigger" data-query="Tóm tắt tình hình các lỗi đang xảy ra trong ca trực"><i class="fa-solid fa-align-left"></i> Tóm tắt ca trực</button>
+                                <button class="btn-trigger" data-query="Quy trình xử lý khi ngân hàng BIDV bảo trì đột xuất là gì?"><i class="fa-solid fa-question"></i> Hướng dẫn BIDV</button>
+                            </div>
+
+                            <!-- Chat Messages Window -->
+                            <div class="chat-messages-container" id="chat-messages-container">
+                                <div class="chat-messages" id="chat-messages">
+                                    <div class="message assistant">
+                                        <div class="msg-avatar"><i class="fa-solid fa-headset"></i></div>
+                                        <div class="msg-content">
+                                            <p>Xin chào! Tôi là Trợ lý AI ca trực. Tôi có thể giúp bạn:</p>
+                                            <ul>
+                                                <li>Tra cứu quy trình chuẩn (SOP) từ tài liệu bạn tải lên.</li>
+                                                <li>Soạn thảo Email cảnh báo lỗi (Incident) theo đúng các log đang diễn ra.</li>
+                                                <li>Tóm tắt các vấn đề tồn đọng trong ca.</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Chat Input Form -->
+                            <form id="chat-form" class="chat-form">
+                                <input type="text" id="chat-input" placeholder="Hỏi AI về quy trình, soạn mail, tóm tắt sự cố..." required autocomplete="off">
+                                <button type="submit" class="btn btn-primary btn-icon" id="btn-send-message">
+                                    <i class="fa-solid fa-paper-plane"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Settings Modal -->

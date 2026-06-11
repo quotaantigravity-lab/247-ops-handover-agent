@@ -51,6 +51,34 @@ async function initApp() {
 
 // Event Listeners Setup
 function setupEventListeners() {
+    // Tab switching logic
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const tabPanes = document.querySelectorAll(".tab-pane");
+    
+    tabButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const targetTab = btn.getAttribute("data-tab");
+            
+            // Toggle active buttons
+            tabButtons.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            
+            // Toggle active panes
+            tabPanes.forEach(pane => {
+                if (pane.id === targetTab) {
+                    pane.classList.add("active");
+                } else {
+                    pane.classList.remove("active");
+                }
+            });
+            
+            // Scroll to bottom of chat if switching to chat tab
+            if (targetTab === "tab-chat") {
+                scrollToBottom();
+            }
+        });
+    });
+
     // Log Form
     logForm.addEventListener("submit", handleAddLog);
 
